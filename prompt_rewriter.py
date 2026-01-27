@@ -1,4 +1,3 @@
-%%writefile /content/NCTB-RAG-PROJECT/prompt_rewriter.py
 # prompt_rewriter.py
 from google import genai
 from google.genai import types
