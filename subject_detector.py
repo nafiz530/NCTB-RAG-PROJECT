@@ -1,13 +1,18 @@
 # subject_detector.py
 from google import genai
 from google.genai import types
-from config import GEMMA_API_KEY, LITE_MODEL, SUBJECT_MAP
+import os
+from config import LITE_MODEL, SUBJECT_MAP
 
 def detect_subject(query):
     if not query or len(query) < 3:
         return "সাধারণ/অজানা"
     
-    client = genai.Client(api_key=GEMMA_API_KEY)
+    api_key = os.getenv("GEMMA_API_KEY")
+    if not api_key:
+        raise ValueError("GEMMA_API_KEY not set in environment")
+    
+    client = genai.Client(api_key=api_key)
     subjects_list = "\n".join([f"- {s}" for s in SUBJECT_MAP.values()])
     
     prompt = f"""
@@ -19,7 +24,7 @@ List:
 
 Question: {query}
 
-Subject (exact match only):
+Subject:
 """
     
     try:
