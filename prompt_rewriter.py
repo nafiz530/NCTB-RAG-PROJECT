@@ -1,10 +1,15 @@
 # prompt_rewriter.py
 from google import genai
 from google.genai import types
-from config import GEMMA_API_KEY, LITE_MODEL
+import os
+from config import LITE_MODEL
 
 def rewrite_prompt(query):
-    client = genai.Client(api_key=GEMMA_API_KEY)
+    api_key = os.getenv("GEMMA_API_KEY")
+    if not api_key:
+        raise ValueError("GEMMA_API_KEY not set in environment")
+    
+    client = genai.Client(api_key=api_key)
     
     prompt = f"""
 You are an expert search optimizer for Class 9-10 NCTB textbooks.
