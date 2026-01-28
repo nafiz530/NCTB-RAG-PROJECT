@@ -1,33 +1,30 @@
 # main_model.py
 from google import genai
 from google.genai import types
-from config import GEMMA_API_KEY, MAIN_MODEL
+import os
+from config import MAIN_MODEL
 
 def analyze_and_answer(original_query, context):
-    client = genai.Client(api_key=GEMMA_API_KEY)
+    api_key = os.getenv("GEMMA_API_KEY")
+    if not api_key:
+        raise ValueError("GEMMA_API_KEY not set in environment")
+    
+    client = genai.Client(api_key=api_key)
     
     prompt = f"""
 You are a Class 9-10 NCTB textbook teacher.
+Answer based only on the provided context lines.
+Use natural Bangla.
+Cite sources naturally (e.g., পৃষ্ঠা ১৬৫ অনুযায়ী).
+If direct answer: answer confidently.
+If indirect but inferable: answer + one short disclaimer.
+If not present: 'উত্তর তথ্যসূত্রে নেই।'
 
-Context provided:
+Context:
 {context}
 
-Special mode detection:
-- If the context is empty, very short, or contains "DIRECT_ANSWER_MODE" → This is a general curiosity question.
-  → Answer using your knowledge + textbook understanding.
-  → Use book references where possible (e.g., "পাঠ্যবইয়ে ... অংশে বলা হয়েছে").
-  → Do not say "উত্তর তথ্যসূত্রে নেই।" for curiosity questions.
-  → Be educational, helpful, and accurate.
-  → Enhance the answer naturally without changing core facts.
-
-- If context contains real book lines → Answer strictly based on those lines.
-  → Cite sources naturally (e.g., পৃষ্ঠা ১৬৫ অনুযায়ী).
-  → If direct match → answer confidently.
-  → If indirect but inferable → answer + one soft disclaimer.
-  → If truly not present → 'উত্তর তথ্যসূত্রে নেই।'
-
 Question: {original_query}
-Answer in natural, student-friendly Bangla:
+Answer:
 """
     
     response = client.models.generate_content(
