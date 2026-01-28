@@ -1,7 +1,10 @@
 # config.py
+from kaggle_secrets import UserSecretsClient
 import os
 
-GEMMA_API_KEY = os.getenv("GEMMA_API_KEY")  # ← will come from Kaggle secrets
+# Load API key from Kaggle secrets (secure)
+user_secrets = UserSecretsClient()
+os.environ["GEMMA_API_KEY"] = user_secrets.get_secret("GEMMA_API_KEY")
 
 SUBJECT_MAP = {
     "bangla_9-10_bangla_1st_sentence.jsonl": "বাংলা ১ম পত্র",
@@ -22,6 +25,7 @@ SUBJECT_MAP = {
     "bangla_9-10_career_education_sentence.jsonl": "ক্যারিয়ার শিক্ষা",
 }
 
+# Kaggle dataset path (your dataset name)
 DATA_PATHS = [
     f"/kaggle/input/bangla-9-10/{filename}"
     for filename in SUBJECT_MAP.keys()
