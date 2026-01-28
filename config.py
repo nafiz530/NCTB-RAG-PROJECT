@@ -1,7 +1,7 @@
 # config.py
 import os
 
-GEMMA_API_KEY = os.getenv("GEMMA_API_KEY")  # Set this in Colab secrets
+GEMMA_API_KEY = os.getenv("GEMMA_API_KEY")  # ← will come from Kaggle secrets
 
 SUBJECT_MAP = {
     "bangla_9-10_bangla_1st_sentence.jsonl": "বাংলা ১ম পত্র",
@@ -22,8 +22,11 @@ SUBJECT_MAP = {
     "bangla_9-10_career_education_sentence.jsonl": "ক্যারিয়ার শিক্ষা",
 }
 
-DATA_PATHS = [f"data/{f}" for f in SUBJECT_MAP.keys()]
+DATA_PATHS = [
+    f"/kaggle/input/bangla-9-10/{filename}"
+    for filename in SUBJECT_MAP.keys()
+]
 
 TOP_K = 10
-LITE_MODEL = "gemma-3-12b-it"
+LITE_MODEL = "gemma-3-27b-it"
 MAIN_MODEL = "gemma-3-27b-it"
